@@ -185,6 +185,8 @@ fun BackpackScreen(artifacts: List<ArtifactData>) {
     val epicCount = artifacts.count { it.rarity == "epic" }
     val commonCount = artifacts.count { it.rarity == "common" }
 
+    val scrollState = rememberScrollState()
+
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.background),
@@ -203,7 +205,11 @@ fun BackpackScreen(artifacts: List<ArtifactData>) {
                     .border(2.dp, Color.Black, RoundedCornerShape(bottomEnd = 24.dp, bottomStart = 24.dp))
                     .padding(top = 32.dp)
             ) {
-                Column {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(scrollState)
+                ) {
                     Row {
                         Box(
                             modifier = Modifier.padding(start = 18.dp),
