@@ -18,11 +18,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import pl.filked.triptrop.R
 import pl.filked.triptrop.ui.theme.*
+import kotlin.collections.listOf
 
 @Composable
 fun MainScreen() {
@@ -95,7 +98,9 @@ fun MainScreen() {
                 ExploreScreen()
             }
             composable(BottomNavItem.Backpack.route) {
-                BackpackScreen()
+                BackpackScreen(listOf(
+                        ArtifactData("Korona Królewicza", R.drawable.crown, "legendary")
+                        ))
             }
             composable(BottomNavItem.Friends.route){
                 FriendsScreen()
@@ -104,5 +109,13 @@ fun MainScreen() {
                 ProfileScreen()
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MainScreenPreview(){
+    TripTropTheme {
+        MainScreen()
     }
 }
