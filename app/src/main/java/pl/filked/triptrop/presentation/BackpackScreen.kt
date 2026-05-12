@@ -26,9 +26,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pl.filked.triptrop.R
+import pl.filked.triptrop.data.ArtifactData
 import pl.filked.triptrop.ui.theme.*
-
-data class ArtifactData(val name: String, val icon: Int, val rarity: String)
 
 @Composable
 fun RowsMaker(rowItems: List<ArtifactData>) {
