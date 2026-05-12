@@ -203,7 +203,7 @@ fun BackpackScreen(artifacts: List<ArtifactData>) {
                     .clip(RoundedCornerShape(bottomEnd = 24.dp, bottomStart = 24.dp))
                     .background(coffeeBean)
                     .border(2.dp, Color.Black, RoundedCornerShape(bottomEnd = 24.dp, bottomStart = 24.dp))
-                    .padding(top = 32.dp)
+                    .padding(top = 10.dp)
             ) {
                 Column(
                     modifier = Modifier

@@ -24,6 +24,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import pl.filked.triptrop.R
+import pl.filked.triptrop.data.ArtifactData
 import pl.filked.triptrop.ui.theme.*
 import kotlin.collections.listOf
 
@@ -95,11 +96,11 @@ fun MainScreen() {
             modifier = Modifier.padding(innerPadding)
         ){
             composable(BottomNavItem.Explore.route){
-                ExploreScreen()
+                ExploreScreen(1777, 100, "Warszawski szlak\nprzeszłości", listOf("Quiz", "Rebus"))
             }
             composable(BottomNavItem.Backpack.route) {
                 BackpackScreen(listOf(
-                        ArtifactData("Korona Królewicza", R.drawable.crown, "legendary")
+                    ArtifactData("Korona Królewicza", R.drawable.crown, "legendary")
                         ))
             }
             composable(BottomNavItem.Friends.route){
