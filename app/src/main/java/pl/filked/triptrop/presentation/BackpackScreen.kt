@@ -25,6 +25,7 @@ import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import pl.filked.triptrop.BackpackData
 import pl.filked.triptrop.R
 import pl.filked.triptrop.data.ArtifactData
 import pl.filked.triptrop.ui.theme.*
@@ -124,14 +125,16 @@ fun ArtefactBox(artifactColor: String, iconID: Int, artifactName: String) {
                             trim = LineHeightStyle.Trim.Both
                         )
                     )
-                    Text(
-                        text = rarityDict[artifactColor] ?: "Zwykły",
-                        fontSize = 12.sp,
-                        fontFamily = PirataOne,
-                        style = baseStyle.copy(
-                            drawStyle = Stroke(width = 10f, join = StrokeJoin.Round)
+                    if (rarityDict[artifactColor] == "Legendarny") {
+                        Text(
+                            text = rarityDict[artifactColor] ?: "Zwykły",
+                            fontSize = 12.sp,
+                            fontFamily = PirataOne,
+                            style = baseStyle.copy(
+                                drawStyle = Stroke(width = 10f, join = StrokeJoin.Round)
+                            )
                         )
-                    )
+                    }
                     Text(
                         text = rarityDict[artifactColor] ?: "Zwykły",
                         fontSize = 12.sp,
@@ -199,7 +202,7 @@ fun BackpackScreen(artifacts: List<ArtifactData>) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp)
+                    .height(170.dp)
                     .clip(RoundedCornerShape(bottomEnd = 24.dp, bottomStart = 24.dp))
                     .background(coffeeBean)
                     .border(2.dp, Color.Black, RoundedCornerShape(bottomEnd = 24.dp, bottomStart = 24.dp))
@@ -281,9 +284,7 @@ fun BackpackScreen(artifacts: List<ArtifactData>) {
 @Preview(showBackground = true)
 @Composable
 fun BackpackScreenPreview() {
-    val artifactsList = listOf(
-        ArtifactData("Korona Królewicza", R.drawable.crown, "legendary")
-    )
+    val artifactsList = BackpackData.allBackpackData
 
     TripTropTheme {
         BackpackScreen(

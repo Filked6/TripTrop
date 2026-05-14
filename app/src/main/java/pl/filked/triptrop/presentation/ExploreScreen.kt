@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,7 +16,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -37,15 +40,141 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import pl.filked.triptrop.ExploreMocks
 import pl.filked.triptrop.R
+import pl.filked.triptrop.data.ClosestJourneyData
+import pl.filked.triptrop.data.JourneyData
 import pl.filked.triptrop.ui.theme.PirataOne
 import pl.filked.triptrop.ui.theme.TripTropTheme
 import pl.filked.triptrop.ui.theme.*
 
 @Composable
-fun JourneyBox(){
+fun JourneyBox(journey: JourneyData){
+    Box(
+        modifier = Modifier
+            .width(250.dp)
+            .height(180.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(coffeeBean)
+            .border(2.dp, Color.Black, RoundedCornerShape(12.dp))
+    ){
+        Column(
+            modifier = Modifier
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
+            Box(
+                modifier = Modifier
+                    .height(120.dp)
+                    .width(240.dp)
+                    .padding(5.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = journey.journeyPhoto),
+                    contentDescription = "Gnom Wrocławski",
+                    modifier = Modifier
+                        .matchParentSize()
+                        .clip(RoundedCornerShape(12.dp))
+                        .border(2.dp, Color.Black, RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
 
+                Box(
+                    modifier = Modifier
+                        .padding(top = 5.dp, end = 5.dp)
+                        .width(50.dp)
+                        .height(20.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(wheat)
+                        .border(1.dp, Color.Black, RoundedCornerShape(12.dp))
+                        .align(Alignment.TopEnd),
+                    contentAlignment = Alignment.Center
+                ){
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(2.dp)
+                    ) {
+                        Text(
+                            text = "50",
+                            fontSize = 12.sp,
+                            fontFamily = OriginalSurfer,
+                            style = TextStyle(
+                                platformStyle = PlatformTextStyle(includeFontPadding = false),
+                                lineHeightStyle = LineHeightStyle(
+                                    alignment = LineHeightStyle.Alignment.Center,
+                                    trim = LineHeightStyle.Trim.Both
+                                )
+                            )
+                        )
+
+                        Image(
+                            painter = painterResource(id = R.drawable.trip_trop_coin),
+                            contentDescription = "TripTrop Coin",
+                            modifier = Modifier.size(12.dp)
+                        )
+                    }
+                }
+            }
+
+            Text(
+                text = "W poszukiwaniu gnomów",
+                fontSize = 14.sp,
+                fontFamily = OriginalSurfer,
+                color = yellowGreen,
+            )
+            Text(
+                text = "Poznaj lokalizację wszystkich małych istot\nzwiedzając stare miasto",
+                fontSize = 10.sp,
+                fontFamily = OriginalSurfer,
+                color = alabasterGrey,
+                textAlign = TextAlign.Center,
+                style = TextStyle(
+                    platformStyle = PlatformTextStyle(includeFontPadding = false),
+                    lineHeightStyle = LineHeightStyle(
+                        alignment = LineHeightStyle.Alignment.Center,
+                        trim = LineHeightStyle.Trim.Both
+                    )),
+            )
+        }
+    }
 }
+
+@Composable
+fun JourneyRow(journeyItems: List<JourneyData>){
+    val journeyTitle = journeyItems[0].journeyName
+    val scrollState = rememberScrollState()
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 20.dp, start = 10.dp)
+    ){
+        Column(
+            modifier = Modifier
+        ) {
+            Text(
+                text = journeyTitle,
+                fontSize = 20.sp,
+                fontFamily = OriginalSurfer,
+                modifier = Modifier
+                    .padding(start = 10.dp)
+            )
+
+            Row(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .fillMaxWidth()
+                    .horizontalScroll(scrollState),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                journeyItems.forEach { item ->
+                    JourneyBox(item)
+                }
+            }
+        }
+    }
+}
+
 @Composable
 fun BoxForRiddles(riddleType: String){
     val typesOfRiddles = mapOf(
@@ -99,10 +228,13 @@ fun MainTextStyle(text : String, textSize: Int, color: Color, drawStyle: DrawSty
     )
 }
 @Composable
-fun ExploreScreen(tripTropCoins: Int, distance: Int, closestJourney: String, listOfRiddlesClose: List<String>?){
-    val closestJournetListSize = listOfRiddlesClose?.size ?: 0
+fun ExploreScreen(tripTropCoins: Int, journeys: List<List<JourneyData>>, closestJourney: ClosestJourneyData){
+    val closestJournetListSize = closestJourney.listOfRiddles?.size ?: 0
     val smaller = closestJournetListSize == 0
     val boxHeight = if (smaller) 200.dp else 300.dp
+    val dist = closestJourney.distance
+
+    val scrollStateColumn = rememberScrollState()
 
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -118,7 +250,7 @@ fun ExploreScreen(tripTropCoins: Int, distance: Int, closestJourney: String, lis
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(130.dp)
+                    .height(110.dp)
                     .clip(RoundedCornerShape(bottomEnd = 24.dp, bottomStart = 24.dp))
                     .background(coffeeBean)
                     .border(2.dp, Color.Black, RoundedCornerShape(bottomEnd = 24.dp, bottomStart = 24.dp))
@@ -172,6 +304,7 @@ fun ExploreScreen(tripTropCoins: Int, distance: Int, closestJourney: String, lis
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .verticalScroll(scrollStateColumn)
             ){
                 Box(
                     modifier = Modifier
@@ -187,7 +320,7 @@ fun ExploreScreen(tripTropCoins: Int, distance: Int, closestJourney: String, lis
                         modifier = Modifier.fillMaxSize()
                     ) {
                         Text(
-                            text = "\u2022 Jesteś blisko ($distance m)",
+                            text = "\u2022 Jesteś blisko ($dist m)",
                             fontSize = 16.sp,
                             fontFamily = OriginalSurfer,
                             color = yellowGreen,
@@ -200,7 +333,7 @@ fun ExploreScreen(tripTropCoins: Int, distance: Int, closestJourney: String, lis
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
-                                text = closestJourney,
+                                text = closestJourney.journeyName,
                                 textAlign = TextAlign.Center,
                                 fontSize = 24.sp,
                                 fontFamily = OriginalSurfer,
@@ -215,10 +348,10 @@ fun ExploreScreen(tripTropCoins: Int, distance: Int, closestJourney: String, lis
                             ){
                                 when(closestJournetListSize){
                                     0 -> Spacer(modifier = Modifier.height(5.dp))
-                                    1 -> BoxForRiddles(listOfRiddlesClose!![0])
+                                    1 -> BoxForRiddles(closestJourney.listOfRiddles!![0])
                                     2 -> {
-                                        BoxForRiddles(listOfRiddlesClose!![0])
-                                        BoxForRiddles(listOfRiddlesClose[1])
+                                        BoxForRiddles(closestJourney.listOfRiddles!![0])
+                                        BoxForRiddles(closestJourney.listOfRiddles[1])
                                     }
                                 }
                             }
@@ -242,6 +375,9 @@ fun ExploreScreen(tripTropCoins: Int, distance: Int, closestJourney: String, lis
                         }
                     }
                 }
+                journeys.forEach{ journey ->
+                    JourneyRow(journey)
+                }
             }
         }
     }
@@ -251,6 +387,10 @@ fun ExploreScreen(tripTropCoins: Int, distance: Int, closestJourney: String, lis
 @Composable
 fun ExploreScreenPreview(){
     TripTropTheme {
-        ExploreScreen(1777, 100, "Warszawski szlak\nprzeszłości", listOf("Quiz", "Rebus"))
+        ExploreScreen(
+            tripTropCoins = 1777,
+            journeys = ExploreMocks.allExploreData,
+            closestJourney = ExploreMocks.featuredJourney
+        )
     }
 }
