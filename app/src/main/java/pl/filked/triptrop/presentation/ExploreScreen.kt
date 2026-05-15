@@ -232,7 +232,7 @@ fun MainTextStyle(text : String, textSize: Int, color: Color, drawStyle: DrawSty
     )
 }
 @Composable
-fun ExploreScreen(tripTropCoins: Int, journeys: List<List<JourneyData>>, closestJourney: ClosestJourneyData){
+fun ExploreScreen(tripTropCoins: Int, journeys: List<List<JourneyData>>, closestJourney: ClosestJourneyData, onMapButtonClick: () -> Unit){
     val closestJournetListSize = closestJourney.listOfRiddles?.size ?: 0
     val smaller = closestJournetListSize == 0
     val boxHeight = if (smaller) 200.dp else 300.dp
@@ -361,7 +361,7 @@ fun ExploreScreen(tripTropCoins: Int, journeys: List<List<JourneyData>>, closest
                             }
 
                             Button(
-                                onClick = {/*TODO*/},
+                                onClick = {onMapButtonClick()},
                                 border = BorderStroke(2.dp, Color.Black),
                                 colors = ButtonDefaults.buttonColors(containerColor = forestMoss),
                                 modifier = Modifier
@@ -394,7 +394,8 @@ fun ExploreScreenPreview(){
         ExploreScreen(
             tripTropCoins = 1777,
             journeys = ExploreMocks.allExploreData,
-            closestJourney = ExploreMocks.featuredJourney
+            closestJourney = ExploreMocks.featuredJourney,
+            onMapButtonClick = {}
         )
     }
 }

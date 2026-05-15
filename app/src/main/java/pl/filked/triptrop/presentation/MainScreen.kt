@@ -105,7 +105,10 @@ fun MainScreen() {
                 ExploreScreen(
                     tripTropCoins = 1777,
                     journeys = ExploreMocks.allExploreData,
-                    closestJourney = ExploreMocks.featuredJourney
+                    closestJourney = ExploreMocks.featuredJourney,
+                    onMapButtonClick = {
+                        navController.navigate("map_screen")
+                    }
                 )
             }
             composable(BottomNavItem.Backpack.route) {
@@ -116,6 +119,9 @@ fun MainScreen() {
             }
             composable(BottomNavItem.Profile.route){
                 ProfileScreen(ProfileSampleData.profileData)
+            }
+            composable("map_screen"){
+                OsmMapScreen(onBackClick = { navController.popBackStack() })
             }
         }
     }
