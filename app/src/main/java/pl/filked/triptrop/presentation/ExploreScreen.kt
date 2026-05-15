@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -57,6 +58,9 @@ fun JourneyBox(journey: JourneyData){
             .clip(RoundedCornerShape(12.dp))
             .background(coffeeBean)
             .border(2.dp, Color.Black, RoundedCornerShape(12.dp))
+            .clickable(
+                onClick = {/*TODO*/}
+            )
     ){
         Column(
             modifier = Modifier
