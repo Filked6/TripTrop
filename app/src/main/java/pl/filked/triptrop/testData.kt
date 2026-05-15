@@ -4,6 +4,7 @@ import pl.filked.triptrop.data.ArtifactData
 import pl.filked.triptrop.data.ClosestJourneyData
 import pl.filked.triptrop.data.FriendsData
 import pl.filked.triptrop.data.JourneyData
+import pl.filked.triptrop.data.ProfileData
 
 object ExploreMocks {
     val popularJourneys = listOf(
@@ -77,4 +78,8 @@ object FriendData {
         FriendsData("Martyna Nowak", R.drawable.krotkowlosa),
         FriendsData("Radek Zalewski", R.drawable.wakacyjny_ziutek)
     )
+}
+
+object ProfileSampleData {
+    val profileData = ProfileData("Jan Kowalski", R.drawable.usmiechas, 1777, 14, 17, 34)
 }
