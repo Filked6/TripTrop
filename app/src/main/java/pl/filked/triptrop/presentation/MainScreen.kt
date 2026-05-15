@@ -26,6 +26,7 @@ import androidx.navigation.compose.composable
 import pl.filked.triptrop.BackpackData
 import pl.filked.triptrop.ExploreMocks
 import pl.filked.triptrop.FriendData
+import pl.filked.triptrop.ProfileSampleData
 import pl.filked.triptrop.R
 import pl.filked.triptrop.data.ArtifactData
 import pl.filked.triptrop.data.ClosestJourneyData
@@ -114,7 +115,7 @@ fun MainScreen() {
                 FriendsScreen(FriendData.allFriendsData)
             }
             composable(BottomNavItem.Profile.route){
-                ProfileScreen()
+                ProfileScreen(ProfileSampleData.profileData)
             }
         }
     }
