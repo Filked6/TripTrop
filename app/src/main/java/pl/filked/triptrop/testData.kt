@@ -2,6 +2,7 @@ package pl.filked.triptrop
 
 import pl.filked.triptrop.data.ArtifactData
 import pl.filked.triptrop.data.ClosestJourneyData
+import pl.filked.triptrop.data.FriendsData
 import pl.filked.triptrop.data.JourneyData
 
 object ExploreMocks {
@@ -66,5 +67,14 @@ object BackpackData {
         ArtifactData("Mały most", R.drawable.golden_gate_bridge, "common"),
         ArtifactData("Cegiełka z Ruin", R.drawable.lego_blocks, "common")
 
+    )
+}
+
+object FriendData {
+    val allFriendsData = listOf(
+        FriendsData("Jerry Kowalski", R.drawable.siwydym),
+        FriendsData("Anna Łąka", R.drawable.azjatka),
+        FriendsData("Martyna Nowak", R.drawable.krotkowlosa),
+        FriendsData("Radek Zalewski", R.drawable.wakacyjny_ziutek)
     )
 }
