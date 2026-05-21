@@ -85,7 +85,7 @@ fun FriendsScreen(friends: List<FriendsData>){
         var searchText by remember {mutableStateOf("")}
 
         Image(
-            painter = painterResource(R.drawable.friends_background),
+            painter = painterResource(R.drawable.bck_friends),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
@@ -158,7 +158,7 @@ fun FriendsScreen(friends: List<FriendsData>){
             ) {
                 Button(
                     onClick = {/*TODO*/ },
-                    border = BorderStroke(2.dp, Color.Black),
+                    border = BorderStroke(2.dp, Color.Black.copy(0.4f)),
                     colors = ButtonDefaults.buttonColors(containerColor = coffeeBean),
                     ) {
                     Text(

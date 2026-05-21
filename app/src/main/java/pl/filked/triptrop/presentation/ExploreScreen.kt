@@ -57,7 +57,7 @@ fun JourneyBox(journey: JourneyData){
             .height(180.dp)
             .clip(RoundedCornerShape(12.dp))
             .background(coffeeBean)
-            .border(2.dp, Color.Black, RoundedCornerShape(12.dp))
+            .border(2.dp, Color.Black.copy(0.4f), RoundedCornerShape(12.dp))
             .clickable(
                 onClick = {/*TODO*/}
             )
@@ -193,7 +193,7 @@ fun BoxForRiddles(riddleType: String){
             .width(110.dp)
             .clip(RoundedCornerShape(10.dp))
             .background(wheat)
-            .border(2.dp, Color.Black, RoundedCornerShape(10.dp))
+            .border(2.dp, Color.Black.copy(0.4f), RoundedCornerShape(10.dp))
     ){
         Column(
             modifier = Modifier
@@ -215,20 +215,12 @@ fun BoxForRiddles(riddleType: String){
     }
 }
 @Composable
-fun MainTextStyle(text : String, textSize: Int, color: Color, drawStyle: DrawStyle = Fill){
+fun MainTextStyle(text : String, textSize: Int, color: Color){
     Text(
         text = text,
         fontSize = textSize.sp,
         fontFamily = PirataOne,
-        color = color,
-        style = TextStyle(
-            drawStyle = drawStyle,
-            platformStyle = PlatformTextStyle(includeFontPadding = false),
-            lineHeightStyle = LineHeightStyle(
-                alignment = LineHeightStyle.Alignment.Center,
-                trim = LineHeightStyle.Trim.Both
-            )
-        )
+        color = color
     )
 }
 @Composable
@@ -240,13 +232,11 @@ fun ExploreScreen(tripTropCoins: Int, journeys: List<List<JourneyData>>, closest
 
     val scrollStateColumn = rememberScrollState()
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(R.drawable.background),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
+    Box(
+        modifier = Modifier
+            .background(oldLace)
+            .fillMaxSize())
+    {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -265,14 +255,8 @@ fun ExploreScreen(tripTropCoins: Int, journeys: List<List<JourneyData>>, closest
                         modifier = Modifier
                             .padding(start = 24.dp)
                     ){
-                        Box {
-                            MainTextStyle("TripTrop", 40, yellowGreen, drawStyle = Stroke(width = 10f, join = StrokeJoin.Round))
-                            MainTextStyle("TripTrop", 40, forestMoss)
-                        }
-                        Box {
-                            MainTextStyle("Na tropie przygody", 20, yellowGreen, drawStyle = Stroke(width = 10f, join = StrokeJoin.Round))
-                            MainTextStyle("Na tropie przygody", 20, forestMoss)
-                        }
+                        MainTextStyle("TripTrop", 40, yellowGreen)
+                        MainTextStyle("Na tropie przygody", 20, yellowGreen)
                     }
 
                     Spacer(modifier = Modifier.weight(1f))
@@ -284,7 +268,7 @@ fun ExploreScreen(tripTropCoins: Int, journeys: List<List<JourneyData>>, closest
                             .height(40.dp)
                             .clip(RoundedCornerShape(8.dp))
                             .background(wheat)
-                            .border(1.dp, Color.Black, RoundedCornerShape(8.dp)),
+                            .border(1.dp, Color.Black.copy(0.4f), RoundedCornerShape(8.dp)),
                         contentAlignment = Alignment.Center
                     ){
                         Row{
@@ -318,7 +302,7 @@ fun ExploreScreen(tripTropCoins: Int, journeys: List<List<JourneyData>>, closest
                         .align(Alignment.CenterHorizontally)
                         .clip(RoundedCornerShape(16.dp))
                         .background(coffeeBean)
-                        .border(2.dp, Color.Black, RoundedCornerShape(16.dp)),
+                        .border(2.dp, Color.Black.copy(0.4f), RoundedCornerShape(16.dp)),
                 ){
                     Column(
                         modifier = Modifier.fillMaxSize()
@@ -362,7 +346,7 @@ fun ExploreScreen(tripTropCoins: Int, journeys: List<List<JourneyData>>, closest
 
                             Button(
                                 onClick = {onMapButtonClick()},
-                                border = BorderStroke(2.dp, Color.Black),
+                                border = BorderStroke(2.dp, Color.Black.copy(0.4f)),
                                 colors = ButtonDefaults.buttonColors(containerColor = forestMoss),
                                 modifier = Modifier
                                     .padding(top = 20.dp)

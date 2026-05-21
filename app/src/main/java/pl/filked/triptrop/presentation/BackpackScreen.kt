@@ -62,9 +62,9 @@ fun SpaceFiller() {
 fun ArtefactBox(artifactColor: String, iconID: Int, artifactName: String) {
     val colorDict = mapOf(
         "mythic" to racingRed,
-        "legendary" to schoolBusYellow,
+        "legendary" to oliveBark,
         "epic" to indigoVelvet,
-        "common" to dimGrey
+        "common" to alabasterGrey
     )
     val rarityDict = mapOf(
         "mythic" to "Mityczny",
@@ -76,16 +76,14 @@ fun ArtefactBox(artifactColor: String, iconID: Int, artifactName: String) {
         modifier = Modifier
             .size(100.dp)
             .clip(RoundedCornerShape(16.dp))
-            .background(colorDict[artifactColor] ?: dimGrey)
-            .border(1.dp, Color.Black, RoundedCornerShape(16.dp))
+            .background(colorDict[artifactColor] ?: alabasterGrey)
     ) {
         Box(
             modifier = Modifier
                 .height(97.dp)
                 .width(100.dp)
                 .clip(RoundedCornerShape(16.dp))
-                .background(lavenderBlush)
-                .border(1.dp, Color.Black, RoundedCornerShape(16.dp))
+                .background(pearlBeige)
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -95,8 +93,7 @@ fun ArtefactBox(artifactColor: String, iconID: Int, artifactName: String) {
                     modifier = Modifier
                         .padding(top = 4.dp)
                         .size(60.dp)
-                        .background(wheat, shape = CircleShape)
-                        .border(1.dp, Color.Black, CircleShape),
+                        .background(ivoryMist, shape = CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
                     Image(
@@ -125,21 +122,12 @@ fun ArtefactBox(artifactColor: String, iconID: Int, artifactName: String) {
                             trim = LineHeightStyle.Trim.Both
                         )
                     )
-                    if (rarityDict[artifactColor] == "Legendarny") {
-                        Text(
-                            text = rarityDict[artifactColor] ?: "Zwykły",
-                            fontSize = 12.sp,
-                            fontFamily = PirataOne,
-                            style = baseStyle.copy(
-                                drawStyle = Stroke(width = 10f, join = StrokeJoin.Round)
-                            )
-                        )
-                    }
+                    val textColor = if (artifactColor == "common") dimGrey else (colorDict[artifactColor] ?: dimGrey)
                     Text(
                         text = rarityDict[artifactColor] ?: "Zwykły",
                         fontSize = 12.sp,
                         fontFamily = PirataOne,
-                        color = colorDict[artifactColor] ?: dimGrey,
+                        color = textColor,
                         style = baseStyle
                     )
                 }
@@ -157,7 +145,7 @@ fun BoxForArtifacts(width: Int, height: Int, text: String, topPadding: Int = 0, 
             .width(width.dp)
             .clip(RoundedCornerShape(5.dp))
             .background(wheat)
-            .border(1.dp, Color.Black, RoundedCornerShape(5.dp)),
+            .border(1.dp, Color.Black.copy(0.4f), RoundedCornerShape(5.dp)),
         contentAlignment = Alignment.Center
     ) {
         Text(
@@ -190,13 +178,11 @@ fun BackpackScreen(artifacts: List<ArtifactData>) {
 
     val scrollState = rememberScrollState()
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(R.drawable.background),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
+    Box(
+        modifier = Modifier
+            .background(oldLace)
+            .fillMaxSize()
+    ) {
 
         Column(modifier = Modifier.fillMaxSize()) {
             Box(

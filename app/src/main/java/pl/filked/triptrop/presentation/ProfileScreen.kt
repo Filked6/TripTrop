@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,7 +27,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,7 +46,7 @@ fun BigButton(text: String){
             .height(50.dp)
             .clip(RoundedCornerShape(10.dp))
             .background(if(text == "Wyloguj") wheat else coffeeBean)
-            .border(1.dp, Color.Black, RoundedCornerShape(10.dp))
+            .border(1.dp, Color.Black.copy(alpha = 0.4f), RoundedCornerShape(10.dp))
             .clickable(
                 onClick = {/*TODO*/}
             ),
@@ -78,7 +76,7 @@ fun SmallBox(text: String, value: Int){
             .size(70.dp)
             .clip(RoundedCornerShape(10.dp))
             .background(wheat)
-            .border(1.dp, Color.Black, RoundedCornerShape(10.dp)),
+            .border(1.dp, Color.Black.copy(alpha = 0.4f), RoundedCornerShape(10.dp)),
     ){
         Column(
             modifier = Modifier
@@ -129,7 +127,7 @@ fun ProfileScreen(profile: ProfileData){
             .fillMaxSize()
     ) {
         Image(
-            painter = painterResource(R.drawable.profile_background),
+            painter = painterResource(R.drawable.bck_profile),
             contentDescription = null,
             modifier = Modifier
                 .fillMaxSize(),
@@ -148,7 +146,7 @@ fun ProfileScreen(profile: ProfileData){
                     .height(320.dp)
                     .clip(RoundedCornerShape(20.dp))
                     .background(coffeeBean)
-                    .border(2.dp, Color.Black, RoundedCornerShape(20.dp))
+                    .border(2.dp, Color.Black.copy(alpha = 0.4f), RoundedCornerShape(20.dp))
             ){
                 Column(
                     modifier = Modifier
@@ -201,7 +199,7 @@ fun ProfileScreen(profile: ProfileData){
                         .height(50.dp)
                         .clip(RoundedCornerShape(10.dp))
                         .background(wheat)
-                        .border(1.dp, Color.Black, RoundedCornerShape(10.dp))
+                        .border(1.dp, Color.Black.copy(alpha = 0.4f), RoundedCornerShape(10.dp))
                 ) {
                     Row(
                         modifier = Modifier
