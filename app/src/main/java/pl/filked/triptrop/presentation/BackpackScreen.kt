@@ -36,6 +36,7 @@ fun RowsMaker(rowItems: List<ArtifactData>) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(start = 20.dp, end = 20.dp)
                 .padding(vertical = 10.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {

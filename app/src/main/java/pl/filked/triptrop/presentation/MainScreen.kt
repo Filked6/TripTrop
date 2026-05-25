@@ -1,6 +1,8 @@
 package pl.filked.triptrop.presentation
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -14,6 +16,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import pl.filked.triptrop.data.BottomNavItem
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -27,10 +30,6 @@ import pl.filked.triptrop.BackpackData
 import pl.filked.triptrop.ExploreMocks
 import pl.filked.triptrop.FriendData
 import pl.filked.triptrop.ProfileSampleData
-import pl.filked.triptrop.R
-import pl.filked.triptrop.data.ArtifactData
-import pl.filked.triptrop.data.ClosestJourneyData
-import pl.filked.triptrop.data.JourneyData
 import pl.filked.triptrop.ui.theme.*
 import kotlin.collections.listOf
 
@@ -63,17 +62,23 @@ fun MainScreen() {
                     items.forEach { item ->
                         NavigationBarItem(
                             icon = {
-                                Icon(
-                                    painter = painterResource(id = item.icon),
-                                    contentDescription = item.title
-                                )
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Icon(
+                                        painter = painterResource(id = item.icon),
+                                        contentDescription = item.title
+                                    )
+                                    Spacer(modifier = Modifier.height(2.dp))
+
+                                    Text(
+                                        text = item.title,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
                             },
-                            label = {
-                                Text(
-                                    text = item.title,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            },
+                            label = null,
+                            alwaysShowLabel = true,
                             selected = currentRoute == item.route,
                             onClick = {
                                 navController.navigate(item.route) {
