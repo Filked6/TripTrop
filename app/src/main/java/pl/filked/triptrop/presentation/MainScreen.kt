@@ -12,6 +12,7 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import pl.filked.triptrop.data.BottomNavItem
@@ -23,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -30,6 +32,8 @@ import pl.filked.triptrop.BackpackData
 import pl.filked.triptrop.ExploreMocks
 import pl.filked.triptrop.FriendData
 import pl.filked.triptrop.ProfileSampleData
+import pl.filked.triptrop.R
+import pl.filked.triptrop.data.JourneyData
 import pl.filked.triptrop.ui.theme.*
 import kotlin.collections.listOf
 
@@ -107,10 +111,14 @@ fun MainScreen() {
             modifier = Modifier.padding(innerPadding)
         ){
             composable(BottomNavItem.Explore.route){
+                val vm: ExploreViewModel = viewModel()
+                LaunchedEffect(Unit) {
+                    vm.loadAdventures()
+                }
                 ExploreScreen(
                     tripTropCoins = 1777,
-                    journeys = ExploreMocks.allExploreData,
-                    closestJourney = ExploreMocks.featuredJourney,
+                    journeys = vm.journeys,
+                    closestJourney = ExploreMocks.featuredJourney, // zostawiamy
                     onMapButtonClick = {
                         navController.navigate("map_screen")
                     }

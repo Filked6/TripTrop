@@ -1,5 +1,6 @@
 package pl.filked.triptrop.presentation
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -41,6 +42,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import pl.filked.triptrop.ExploreMocks
 import pl.filked.triptrop.R
 import pl.filked.triptrop.data.ClosestJourneyData
@@ -51,6 +53,7 @@ import pl.filked.triptrop.ui.theme.*
 
 @Composable
 fun JourneyBox(journey: JourneyData){
+    Log.d("TEST_APP", "ExploreScreen się renderuje")
     Box(
         modifier = Modifier
             .width(250.dp)
@@ -73,9 +76,9 @@ fun JourneyBox(journey: JourneyData){
                     .width(240.dp)
                     .padding(5.dp)
             ) {
-                Image(
-                    painter = painterResource(id = journey.journeyPhoto),
-                    contentDescription = "Gnom Wrocławski",
+                AsyncImage(
+                    model = "https://upload.wikimedia.org/wikipedia/commons/a/a5/Sala_Kongresowa_2011.JPG",
+                    contentDescription = null,
                     modifier = Modifier
                         .matchParentSize()
                         .clip(RoundedCornerShape(12.dp))
@@ -121,13 +124,13 @@ fun JourneyBox(journey: JourneyData){
             }
 
             Text(
-                text = "W poszukiwaniu gnomów",
+                text = journey.journeyName,
                 fontSize = 14.sp,
                 fontFamily = OriginalSurfer,
                 color = yellowGreen,
             )
             Text(
-                text = "Poznaj lokalizację wszystkich małych istot\nzwiedzając stare miasto",
+                text = "Odkrywaj Warszawę",
                 fontSize = 10.sp,
                 fontFamily = OriginalSurfer,
                 color = alabasterGrey,

@@ -13,14 +13,14 @@ object ExploreMocks {
             journeyName = "W poszukiwaniu gnomów",
             journeyDetails = "Poznaj lokalizację wszystkich małych istot\nzwiedzając stare miasto",
             journeyCost = 50,
-            journeyPhoto = R.drawable.gnom_wroclawski
+            journeyPhoto = "https://upload.wikimedia.org/wikipedia/commons/c/cd/PL_road_sign_A-14.svg"
         ),
         JourneyData(
             journeysTitle = "Popularne trasy:",
             journeyName = "Malowniczy Gdańsk",
             journeyDetails = "Poznaj historię starego miasta w Gdańsku",
             journeyCost = 250,
-            journeyPhoto = R.drawable.gdansk_stare_miasto
+            journeyPhoto = "https://upload.wikimedia.org/wikipedia/commons/c/cd/PL_road_sign_A-14.svg"
         ),
     )
 
@@ -30,14 +30,14 @@ object ExploreMocks {
             journeyName = "Warszawskie centrum Polski",
             journeyDetails = "Poczuj klimat królewskich elekcji. To tutaj, w sercu\nStarego Miasta, decydowały się losy Polski.",
             journeyCost = 500,
-            journeyPhoto = R.drawable.gnom_wroclawski
+            journeyPhoto = "https://upload.wikimedia.org/wikipedia/commons/c/cd/PL_road_sign_A-14.svg"
         ),
         JourneyData(
             journeysTitle = "Królewskie oblicze Polski:",
             journeyName = "Malowniczy Gdańsk",
             journeyDetails = "Trasa, którą przez wieki podążały królewskie\norszaki. Poczuj się jak gość na wielkiej koronacji.",
             journeyCost = 150,
-            journeyPhoto = R.drawable.stare_miasto_warszawa
+            journeyPhoto = "https://upload.wikimedia.org/wikipedia/commons/c/cd/PL_road_sign_A-14.svg"
         ),
     )
 
