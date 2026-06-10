@@ -52,7 +52,7 @@ import pl.filked.triptrop.ui.theme.*
 @Composable
 fun JourneyBox(
     journey: JourneyData,
-    onJourneyClick: () -> Unit
+    onJourneyClick: (JourneyData) -> Unit
 ){
     Log.d("TEST_APP", "ExploreScreen się renderuje")
     Box(
@@ -63,7 +63,7 @@ fun JourneyBox(
             .background(coffeeBean)
             .border(2.dp, Color.Black.copy(0.4f), RoundedCornerShape(12.dp))
             .clickable(
-                onClick = {onJourneyClick()}
+                onClick = {onJourneyClick(journey)}
             )
     ){
         Column(
@@ -155,7 +155,7 @@ fun JourneyBox(
 @Composable
 fun JourneyRow(
     journeyItems: List<JourneyData>,
-    onRowClick: () -> Unit
+    onRowClick: (JourneyData) -> Unit
 ){
     val journeyTitle = journeyItems[0].journeyName
     val scrollState = rememberScrollState()
@@ -226,6 +226,7 @@ fun BoxForRiddles(riddleType: String){
         }
     }
 }
+
 @Composable
 fun MainTextStyle(text : String, textSize: Int, color: Color){
     Text(
@@ -235,13 +236,14 @@ fun MainTextStyle(text : String, textSize: Int, color: Color){
         color = color
     )
 }
+
 @Composable
 fun ExploreScreen(
     tripTropCoins: Int,
     journeys: List<List<JourneyData>>,
     closestJourney: ClosestJourneyData,
     onMapButtonClick: () -> Unit,
-    onJourneyClick: () -> Unit
+    onJourneyClick: (JourneyData) -> Unit
 ){
     val closestJournetListSize = closestJourney.listOfRiddles?.size ?: 0
     val smaller = closestJournetListSize == 0

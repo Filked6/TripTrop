@@ -13,10 +13,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import pl.filked.triptrop.data.BottomNavItem
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,6 +44,8 @@ import kotlin.collections.listOf
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
+
+    var currentMapTarget by remember { mutableStateOf<MapTarget?>(null) }
 
     val items = listOf(
         BottomNavItem.Explore,
@@ -78,7 +83,7 @@ fun MainScreen() {
 
                                     Text(
                                         text = item.title,
-                                        fontSize = 16.sp, // Jeśli się dalej rozjeżdża tekst ikonek na dole to zmienić na mniejsze
+                                        fontSize = 14.sp, // Jeśli się dalej rozjeżdża tekst ikonek na dole to zmienić na mniejsze
                                         fontWeight = FontWeight.Bold
                                     )
                                 }
@@ -122,9 +127,23 @@ fun MainScreen() {
                     journeys = vm.journeys,
                     closestJourney = ExploreMocks.featuredJourney, // zostawiamy
                     onMapButtonClick = {
+                        currentMapTarget = MapTarget(
+                            latitude = 52.220082,
+                            longitude = 21.012086,
+                            title = ExploreMocks.featuredJourney.journeyName,
+                            description = "Jesteś blisko! Rozwiąż zagadkę.",
+                            imageUrl = "https://upload.wikimedia.org/wikipedia/commons/a/a5/Sala_Kongresowa_2011.JPG"
+                        )
                         navController.navigate("map_screen")
                     },
-                    onJourneyClick = {
+                    onJourneyClick = { clickedJourney ->
+                        currentMapTarget = MapTarget(
+                            latitude = 52.220082,
+                            longitude = 21.012086,
+                            title = clickedJourney.journeyName,
+                            description = "Opis wybranej podróży.",
+                            imageUrl = "https://upload.wikimedia.org/wikipedia/commons/a/a5/Sala_Kongresowa_2011.JPG"
+                        )
                         navController.navigate("map_screen")
                     }
                 )
@@ -139,7 +158,10 @@ fun MainScreen() {
                 ProfileScreen(ProfileSampleData.profileData)
             }
             composable("map_screen"){
-                OsmMapScreen(onBackClick = { navController.popBackStack() })
+                OsmMapScreen(
+                    target = currentMapTarget,
+                    onBackClick = { navController.popBackStack() }
+                )
             }
         }
     }
