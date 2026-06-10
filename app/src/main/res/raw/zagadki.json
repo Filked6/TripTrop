@@ -1,0 +1,352 @@
+[
+  {
+    "id": 1,
+    "question": "W którym roku Warszawa została stolicą Polski?",
+    "answers": [
+      "1410",
+      "1525",
+      "1596",
+      "1791"
+    ],
+    "correctAnswer": 2,
+    "difficulty": "easy",
+    "year": "1596",
+    "category": "historia"
+  },
+  {
+    "id": 2,
+    "question": "Który król przeniósł stolicę z Krakowa do Warszawy?",
+    "answers": [
+      "Kazimierz Wielki",
+      "Zygmunt III Waza",
+      "Jan III Sobieski",
+      "Stanisław August Poniatowski"
+    ],
+    "correctAnswer": 1,
+    "difficulty": "easy",
+    "year": "1596",
+    "category": "historia"
+  },
+  {
+    "id": 3,
+    "question": "Jak nazywa się najstarsza część Warszawy wpisana na listę UNESCO?",
+    "answers": [
+      "Powiśle",
+      "Muranów",
+      "Stare Miasto",
+      "Praga"
+    ],
+    "correctAnswer": 2,
+    "difficulty": "easy",
+    "year": "1980",
+    "category": "zabytki"
+  },
+  {
+    "id": 4,
+    "question": "W którym roku wybuchło Powstanie Warszawskie?",
+    "answers": [
+      "1939",
+      "1943",
+      "1944",
+      "1945"
+    ],
+    "correctAnswer": 2,
+    "difficulty": "easy",
+    "year": "1944",
+    "category": "powstanie"
+  },
+  {
+    "id": 5,
+    "question": "Ile dni trwało Powstanie Warszawskie?",
+    "answers": [
+      "44",
+      "63",
+      "78",
+      "100"
+    ],
+    "correctAnswer": 1,
+    "difficulty": "medium",
+    "year": "1944",
+    "category": "powstanie"
+  },
+  {
+    "id": 6,
+    "question": "Który pałac był rezydencją króla Jana III Sobieskiego w Warszawie?",
+    "answers": [
+      "Pałac Kultury i Nauki",
+      "Pałac w Wilanowie",
+      "Pałac Saski",
+      "Belweder"
+    ],
+    "correctAnswer": 1,
+    "difficulty": "easy",
+    "year": "XVII wiek",
+    "category": "zabytki"
+  },
+  {
+    "id": 7,
+    "question": "Jak nazywała się dzielnica żydowska utworzona przez Niemców w czasie II wojny światowej?",
+    "answers": [
+      "Nowe Miasto",
+      "Powiśle",
+      "Getto Warszawskie",
+      "Mokotów"
+    ],
+    "correctAnswer": 2,
+    "difficulty": "easy",
+    "year": "1940",
+    "category": "II wojna światowa"
+  },
+  {
+    "id": 8,
+    "question": "Który most był pierwszym stałym mostem na Wiśle w Warszawie?",
+    "answers": [
+      "Most Poniatowskiego",
+      "Most Kierbedzia",
+      "Most Gdański",
+      "Most Świętokrzyski"
+    ],
+    "correctAnswer": 1,
+    "difficulty": "medium",
+    "year": "1864",
+    "category": "infrastruktura"
+  },
+  {
+    "id": 9,
+    "question": "Jak nazywa się symbol Warszawy przedstawiany jako pół kobieta, pół ryba?",
+    "answers": [
+      "Syrena",
+      "Rusałka",
+      "Nimfa",
+      "Boginka"
+    ],
+    "correctAnswer": 0,
+    "difficulty": "easy",
+    "year": "średniowiecze",
+    "category": "legendy"
+  },
+  {
+    "id": 10,
+    "question": "Który budynek był najwyższy w Polsce po ukończeniu w 1955 roku?",
+    "answers": [
+      "Zamek Królewski",
+      "Pałac Kultury i Nauki",
+      "Hotel Marriott",
+      "Warsaw Spire"
+    ],
+    "correctAnswer": 1,
+    "difficulty": "easy",
+    "year": "1955",
+    "category": "architektura"
+  },
+  {
+    "id": 11,
+    "question": "Która rzeka przepływa przez Warszawę?",
+    "answers": [
+      "Odra",
+      "Wisła",
+      "Bug",
+      "Narew"
+    ],
+    "correctAnswer": 1,
+    "difficulty": "easy",
+    "year": "współczesność",
+    "category": "geografia"
+  },
+  {
+    "id": 12,
+    "question": "W którym roku zakończono odbudowę Zamku Królewskiego w Warszawie?",
+    "answers": [
+      "1974",
+      "1984",
+      "1990",
+      "1968"
+    ],
+    "correctAnswer": 1,
+    "difficulty": "medium",
+    "year": "1984",
+    "category": "zabytki"
+  },
+  {
+    "id": 13,
+    "question": "Który król jest związany z budową Pałacu w Wilanowie?",
+    "answers": [
+      "Zygmunt III Waza",
+      "Jan III Sobieski",
+      "Władysław Jagiełło",
+      "August II Mocny"
+    ],
+    "correctAnswer": 1,
+    "difficulty": "easy",
+    "year": "XVII wiek",
+    "category": "historia"
+  },
+  {
+    "id": 14,
+    "question": "Jak nazywa się kolumna stojąca na Placu Zamkowym?",
+    "answers": [
+      "Kolumna Jana III Sobieskiego",
+      "Kolumna Zygmunta",
+      "Kolumna Niepodległości",
+      "Kolumna Warszawska"
+    ],
+    "correctAnswer": 1,
+    "difficulty": "easy",
+    "year": "1644",
+    "category": "zabytki"
+  },
+  {
+    "id": 15,
+    "question": "W którym roku wybuchło powstanie w getcie warszawskim?",
+    "answers": [
+      "1942",
+      "1943",
+      "1944",
+      "1945"
+    ],
+    "correctAnswer": 1,
+    "difficulty": "medium",
+    "year": "1943",
+    "category": "II wojna światowa"
+  },
+  {
+    "id": 16,
+    "question": "Jak nazywa się największy park królewski w Warszawie?",
+    "answers": [
+      "Park Skaryszewski",
+      "Łazienki Królewskie",
+      "Pole Mokotowskie",
+      "Ogród Saski"
+    ],
+    "correctAnswer": 1,
+    "difficulty": "easy",
+    "year": "XVIII wiek",
+    "category": "zabytki"
+  },
+  {
+    "id": 17,
+    "question": "Który pierwszy prezydent  II RP został zamordowany w 1922 roku?",
+    "answers": [
+      "Stefan Starzyński",
+      "Gabriel Narutowicz",
+      "Ignacy Mościcki",
+      "Wojciech Jaruzelski"
+    ],
+    "correctAnswer": 1,
+    "difficulty": "hard",
+    "year": "1922",
+    "category": "historia"
+  },
+  {
+    "id": 18,
+    "question": "Jak nazywał się prezydent Warszawy bohatersko kierujący obroną miasta w 1939 roku?",
+    "answers": [
+      "Stefan Starzyński",
+      "Stanisław Wojciechowski",
+      "Józef Beck",
+      "Edward Rydz-Śmigły"
+    ],
+    "correctAnswer": 0,
+    "difficulty": "medium",
+    "year": "1939",
+    "category": "II wojna światowa"
+  },
+  {
+    "id": 19,
+    "question": "Która dzielnica Warszawy słynie z zachowanej przedwojennej zabudowy po prawej stronie Wisły?",
+    "answers": [
+      "Ochota",
+      "Mokotów",
+      "Praga-Północ",
+      "Wola"
+    ],
+    "correctAnswer": 2,
+    "difficulty": "easy",
+    "year": "XIX-XX wiek",
+    "category": "dzielnice"
+  },
+  {
+    "id": 20,
+    "question": "Gdzie znajduje się najsłynniejszy pomnik Fryderyka Chopina w Warszawie?",
+    "answers": [
+      "Pomnik na Placu Zamkowym",
+      "Pomnik w Łazienkach Królewskich",
+      "Pomnik przy Pałacu Kultury",
+      "Pomnik na Cytadeli"
+    ],
+    "correctAnswer": 1,
+    "difficulty": "easy",
+    "year": "1926",
+    "category": "kultura"
+  },
+  {
+    "id": 21,
+    "question": "Które muzeum zostało otwarte w 2004 roku i poświęcone jest wydarzeniom z 1944 roku?",
+    "answers": [
+      "Muzeum Historii Polski",
+      "Muzeum Powstania Warszawskiego",
+      "Muzeum Wojska Polskiego",
+      "POLIN"
+    ],
+    "correctAnswer": 1,
+    "difficulty": "easy",
+    "year": "2004",
+    "category": "powstanie"
+  },
+  {
+    "id": 22,
+    "question": "Jak nazywa się historyczna rezydencja polskich monarchów odbudowana po II wojnie światowej?",
+    "answers": [
+      "Belweder",
+      "Pałac Prezydencki",
+      "Zamek Królewski",
+      "Pałac Saski"
+    ],
+    "correctAnswer": 2,
+    "difficulty": "easy",
+    "year": "1971-1984",
+    "category": "zabytki"
+  },
+  {
+    "id": 23,
+    "question": "Który most łączy Śródmieście z Pragą i został otwarty w 1914 roku?",
+    "answers": [
+      "Most Gdański",
+      "Most Poniatowskiego",
+      "Most Śląsko-Dąbrowski",
+      "Most Siekierkowski"
+    ],
+    "correctAnswer": 1,
+    "difficulty": "medium",
+    "year": "1914",
+    "category": "infrastruktura"
+  },
+  {
+    "id": 24,
+    "question": "Jak nazywa się najstarszy publiczny ogród miejski w Warszawie?",
+    "answers": [
+      "Ogród Saski",
+      "Łazienki Królewskie",
+      "Park Ujazdowski",
+      "Pole Mokotowskie"
+    ],
+    "correctAnswer": 0,
+    "difficulty": "medium",
+    "year": "1727",
+    "category": "zabytki"
+  },
+  {
+    "id": 25,
+    "question": "Który obiekt był najwyższym budynkiem Unii Europejskiej w momencie ukończenia w 2022 roku?",
+    "answers": [
+      "Varso Tower",
+      "Warsaw Spire",
+      "Pałac Kultury i Nauki",
+      "Q22"
+    ],
+    "correctAnswer": 0,
+    "difficulty": "medium",
+    "year": "2022",
+    "category": "architektura"
+  }
+]

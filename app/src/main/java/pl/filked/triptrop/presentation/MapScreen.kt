@@ -9,12 +9,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.BottomSheetScaffold
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SheetValue
-import androidx.compose.material3.Text
-import androidx.compose.material3.rememberBottomSheetScaffoldState
-import androidx.compose.material3.rememberStandardBottomSheetState
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,65 +30,63 @@ import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.IMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
+import pl.filked.triptrop.QuizManager
+import pl.filked.triptrop.data.MapTarget
 import pl.filked.triptrop.ui.theme.OriginalSurfer
 import pl.filked.triptrop.ui.theme.wheat
+import androidx.compose.material3.Button
+import androidx.compose.material3.AlertDialog
+import pl.filked.triptrop.data.QuizQuestion
 
-data class MapTarget(
-    val latitude: Double,
-    val longitude: Double,
-    val title: String,
-    val description: String,
-    val imageUrl: String
-)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OsmMapScreen(
-    target: MapTarget? = null,
+    target: List<MapTarget> = emptyList(),
     onBackClick: () -> Unit
 ) {
     val context = LocalContext.current
+    val questions = remember {
+        QuizManager.loadQuestions(context)
+    }
 
+    var currentQuestion by remember { mutableStateOf<QuizQuestion?>(null) }
+    var answerResult by remember { mutableStateOf<String?>(null) }
+    var usedQuestionIds by remember { mutableStateOf(setOf<Int>()) }
+
+    var selectedTarget by remember { mutableStateOf<MapTarget?>(null) }
     var distanceToTarget by remember { mutableStateOf<Double?>(null) }
 
-    val isCloseEnough = target != null && distanceToTarget != null && distanceToTarget!! <= 30.0
+    val isCloseEnough = selectedTarget != null &&
+            distanceToTarget != null &&
+            distanceToTarget!! <= 30.0
 
-    //Konfiguracja osmdroid
     LaunchedEffect(Unit) {
         Configuration.getInstance().userAgentValue = context.packageName
     }
 
-    //Obsługa uprawnień do lokalizacji
     val locationPermissionRequest = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-    }
+    ) { }
 
     LaunchedEffect(Unit) {
         locationPermissionRequest.launch(Manifest.permission.ACCESS_FINE_LOCATION)
     }
 
-    // 1. Zapisujemy aktualny stan "czy jesteśmy blisko", aby funkcja niżej zawsze miała świeże dane
     val currentIsCloseEnough by rememberUpdatedState(isCloseEnough)
 
-    // 2. Tworzymy stan z blokadą ukrywania
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberStandardBottomSheetState(
             initialValue = SheetValue.Hidden,
             skipHiddenState = false,
             confirmValueChange = { newState ->
-                // Jeśli próbujemy całkowicie ukryć pasek (Hidden), ALE nadal jesteśmy przy punkcie:
-                if (newState == SheetValue.Hidden && currentIsCloseEnough) {
-                    false // ZABLOKUJ zmianę stanu (pasek "odbije" się z powrotem do 100.dp)
-                } else {
-                    true  // POZWÓL na zmianę (np. do pełnego rozsunięcia lub ukrycia, gdy odejdziemy)
-                }
+                !(newState == SheetValue.Hidden && currentIsCloseEnough)
             }
         )
     )
 
-    LaunchedEffect(isCloseEnough) {
-        if (isCloseEnough) {
+    LaunchedEffect(selectedTarget) {
+        if (selectedTarget != null) {
             scaffoldState.bottomSheetState.partialExpand()
         } else {
             scaffoldState.bottomSheetState.hide()
@@ -102,10 +95,12 @@ fun OsmMapScreen(
 
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
-        sheetPeekHeight = if (isCloseEnough) 100.dp else 0.dp,
+        sheetPeekHeight = if (selectedTarget != null) 100.dp else 0.dp,
         sheetContainerColor = wheat,
         sheetContent = {
-            if (target != null) {
+            val point = selectedTarget
+
+            if (point != null) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -113,20 +108,21 @@ fun OsmMapScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = target.title,
+                        text = point.title,
                         fontSize = 22.sp,
                         fontFamily = OriginalSurfer,
                         color = Color.Black
                     )
+
                     Spacer(modifier = Modifier.height(12.dp))
 
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
-                            .data(target.imageUrl)
+                            .data(point.imageUrl)
                             .addHeader("User-Agent", "TripTropApp/1.0")
                             .crossfade(true)
                             .build(),
-                        contentDescription = target.title,
+                        contentDescription = point.title,
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(150.dp)
@@ -137,11 +133,35 @@ fun OsmMapScreen(
 
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
-                        text = target.description,
+                        text = point.description,
                         fontSize = 16.sp,
                         color = Color.DarkGray
                     )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Button(
+                        onClick = {
+                            val availableQuestions = questions.filter {
+                                it.id !in usedQuestionIds
+                            }
+
+                            if (availableQuestions.isNotEmpty()) {
+                                val randomQuestion = availableQuestions.random()
+
+                                currentQuestion = randomQuestion
+                                usedQuestionIds = usedQuestionIds + randomQuestion.id
+                                answerResult = null
+                            } else {
+                                answerResult = "Brak dostępnych zagadek dla tej trasy."
+                            }
+                        }
+                    ) {
+                        Text("Rozwiąż zagadkę")
+                    }
+
                     Spacer(modifier = Modifier.height(24.dp))
+
                 }
             } else {
                 Box(modifier = Modifier.height(1.dp))
@@ -153,40 +173,62 @@ fun OsmMapScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            //Mapa
             AndroidView(
                 modifier = Modifier.fillMaxSize(),
                 factory = { ctx ->
                     MapView(ctx).apply {
                         setTileSource(TileSourceFactory.MAPNIK)
                         setMultiTouchControls(true)
-
-                        // Ustawienia kamery
                         controller.setZoom(18.0)
 
-                        if (target != null) {
-                            val targetGeoPoint = GeoPoint(target.latitude, target.longitude)
-                            val destinationMarker = Marker(this).apply {
-                                position = targetGeoPoint
-                                title = target.title
-                                setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-                            }
-                            overlays.add(destinationMarker)
+                        if (target.isNotEmpty()) {
+                            controller.setCenter(
+                                GeoPoint(
+                                    target.first().latitude,
+                                    target.first().longitude
+                                )
+                            )
                         }
 
-                        // Nakładka lokalizacji użytkownika
-                        val locationProvider = GpsMyLocationProvider(ctx)
-                        val myLocationOverlay = object : MyLocationNewOverlay(locationProvider, this) {
-                            override fun onLocationChanged(location: Location?, source: IMyLocationProvider?) {
-                                super.onLocationChanged(location, source)
+                        target.forEach { point ->
+                            val geoPoint = GeoPoint(point.latitude, point.longitude)
 
-                                if (location != null && target != null) {
-                                    val userGeo = GeoPoint(location.latitude, location.longitude)
-                                    val targetGeo = GeoPoint(target.latitude, target.longitude)
-                                    distanceToTarget = userGeo.distanceToAsDouble(targetGeo)
+                            val marker = Marker(this).apply {
+                                position = geoPoint
+                                title = point.title
+                                snippet = point.description
+                                setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+
+                                setOnMarkerClickListener { _, _ ->
+                                    selectedTarget = point
+                                    true
                                 }
                             }
+
+                            overlays.add(marker)
                         }
+
+                        val locationProvider = GpsMyLocationProvider(ctx)
+
+                        val myLocationOverlay =
+                            object : MyLocationNewOverlay(locationProvider, this) {
+                                override fun onLocationChanged(
+                                    location: Location?,
+                                    source: IMyLocationProvider?
+                                ) {
+                                    super.onLocationChanged(location, source)
+
+                                    val point = selectedTarget
+
+                                    if (location != null && point != null) {
+                                        val userGeo =
+                                            GeoPoint(location.latitude, location.longitude)
+                                        val targetGeo = GeoPoint(point.latitude, point.longitude)
+                                        distanceToTarget = userGeo.distanceToAsDouble(targetGeo)
+                                    }
+                                }
+                            }
+
                         myLocationOverlay.enableMyLocation()
                         myLocationOverlay.enableFollowLocation()
                         overlays.add(myLocationOverlay)
@@ -194,7 +236,6 @@ fun OsmMapScreen(
                 }
             )
 
-            // Przycisk powrotny
             Box(
                 modifier = Modifier
                     .padding(top = 40.dp, start = 20.dp)
@@ -215,5 +256,62 @@ fun OsmMapScreen(
                 )
             }
         }
+    }
+
+    if (currentQuestion != null) {
+        val question = currentQuestion!!
+        val letters = listOf("A", "B", "C", "D")
+
+        AlertDialog(
+            onDismissRequest = {
+                currentQuestion = null
+                answerResult = null
+            },
+            title = {
+                Text("Zagadka")
+            },
+            text = {
+                Column {
+                    Text(question.question)
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    question.answers.forEachIndexed { index, answer ->
+                        Button(
+                            onClick = {
+                                answerResult =
+                                    if (index == question.correctAnswer) {
+                                        "Poprawna odpowiedź!"
+                                    } else {
+                                        val correct = question.answers[question.correctAnswer]
+                                        "Zła odpowiedź. Poprawna odpowiedź to: ${letters[question.correctAnswer]}. $correct"
+                                    }
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp)
+                        ) {
+                            Text("${letters[index]}. $answer")
+                        }
+                    }
+
+                    if (answerResult != null) {
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        Text(answerResult!!)
+                    }
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        currentQuestion = null
+                        answerResult = null
+                    }
+                ) {
+                    Text("Zamknij")
+                }
+            }
+        )
     }
 }

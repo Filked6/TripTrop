@@ -40,12 +40,13 @@ import pl.filked.triptrop.R
 import pl.filked.triptrop.data.JourneyData
 import pl.filked.triptrop.ui.theme.*
 import kotlin.collections.listOf
+import pl.filked.triptrop.data.MapTarget
 
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
 
-    var currentMapTarget by remember { mutableStateOf<MapTarget?>(null) }
+    var currentMapTarget by remember { mutableStateOf(listOf<MapTarget>()) }
 
     val items = listOf(
         BottomNavItem.Explore,
@@ -125,25 +126,47 @@ fun MainScreen() {
                 ExploreScreen(
                     tripTropCoins = 1777,
                     journeys = vm.journeys,
-                    closestJourney = ExploreMocks.featuredJourney, // zostawiamy
+                    closestJourney = ExploreMocks.featuredJourney,
+
                     onMapButtonClick = {
-                        currentMapTarget = MapTarget(
-                            latitude = 52.220082,
-                            longitude = 21.012086,
-                            title = ExploreMocks.featuredJourney.journeyName,
-                            description = "Jesteś blisko! Rozwiąż zagadkę.",
-                            imageUrl = "https://upload.wikimedia.org/wikipedia/commons/a/a5/Sala_Kongresowa_2011.JPG"
+                        currentMapTarget = listOf(
+                            MapTarget(
+                                latitude = 52.220082,
+                                longitude = 21.012086,
+                                title = "Punkt 1",
+                                description = "Pierwszy punkt przygody.",
+                                imageUrl = "https://upload.wikimedia.org/wikipedia/commons/d/d9/Apoteoza_wiedzy_2020.jpg"
+                            ),
+                            MapTarget(
+                                latitude = 52.220800,
+                                longitude = 21.011300,
+                                title = "Punkt 2",
+                                description = "Drugi punkt przygody.",
+                                imageUrl = "https://upload.wikimedia.org/wikipedia/commons/d/d9/Apoteoza_wiedzy_2020.jpg"
+                            )
                         )
+
                         navController.navigate("map_screen")
                     },
+
                     onJourneyClick = { clickedJourney ->
-                        currentMapTarget = MapTarget(
-                            latitude = 52.220082,
-                            longitude = 21.012086,
-                            title = clickedJourney.journeyName,
-                            description = "Opis wybranej podróży.",
-                            imageUrl = "https://upload.wikimedia.org/wikipedia/commons/a/a5/Sala_Kongresowa_2011.JPG"
+                        currentMapTarget = listOf(
+                            MapTarget(
+                                latitude = 52.220082,
+                                longitude = 21.012086,
+                                title = clickedJourney.journeyName + " - punkt 1",
+                                description = "Pierwszy punkt tej trasy.",
+                                imageUrl = "https://upload.wikimedia.org/wikipedia/commons/d/d9/Apoteoza_wiedzy_2020.jpg"
+                            ),
+                            MapTarget(
+                                latitude = 52.220800,
+                                longitude = 21.011300,
+                                title = clickedJourney.journeyName + " - punkt 2",
+                                description = "Drugi punkt tej trasy.",
+                                imageUrl = "https://upload.wikimedia.org/wikipedia/commons/d/d9/Apoteoza_wiedzy_2020.jpg"
+                            )
                         )
+
                         navController.navigate("map_screen")
                     }
                 )
