@@ -24,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -77,6 +78,7 @@ fun MainScreen() {
 
                                     Text(
                                         text = item.title,
+                                        fontSize = 16.sp, // Jeśli się dalej rozjeżdża tekst ikonek na dole to zmienić na mniejsze
                                         fontWeight = FontWeight.Bold
                                     )
                                 }
@@ -120,6 +122,9 @@ fun MainScreen() {
                     journeys = vm.journeys,
                     closestJourney = ExploreMocks.featuredJourney, // zostawiamy
                     onMapButtonClick = {
+                        navController.navigate("map_screen")
+                    },
+                    onJourneyClick = {
                         navController.navigate("map_screen")
                     }
                 )

@@ -29,11 +29,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeJoin
-import androidx.compose.ui.graphics.drawscope.DrawStyle
-import androidx.compose.ui.graphics.drawscope.Fill
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
@@ -43,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import pl.filked.triptrop.ExploreMocks
 import pl.filked.triptrop.R
 import pl.filked.triptrop.data.ClosestJourneyData
@@ -52,7 +50,10 @@ import pl.filked.triptrop.ui.theme.TripTropTheme
 import pl.filked.triptrop.ui.theme.*
 
 @Composable
-fun JourneyBox(journey: JourneyData){
+fun JourneyBox(
+    journey: JourneyData,
+    onJourneyClick: () -> Unit
+){
     Log.d("TEST_APP", "ExploreScreen się renderuje")
     Box(
         modifier = Modifier
@@ -62,7 +63,7 @@ fun JourneyBox(journey: JourneyData){
             .background(coffeeBean)
             .border(2.dp, Color.Black.copy(0.4f), RoundedCornerShape(12.dp))
             .clickable(
-                onClick = {/*TODO*/}
+                onClick = {onJourneyClick()}
             )
     ){
         Column(
@@ -77,8 +78,13 @@ fun JourneyBox(journey: JourneyData){
                     .padding(5.dp)
             ) {
                 AsyncImage(
-                    model = "https://upload.wikimedia.org/wikipedia/commons/a/a5/Sala_Kongresowa_2011.JPG",
-                    contentDescription = null,
+                    // Zamiast samego Stringa, budujemy własne zapytanie
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data("https://upload.wikimedia.org/wikipedia/commons/a/a5/Sala_Kongresowa_2011.JPG")
+                        .addHeader("User-Agent", "TripTropApp/1.0")
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = "Sala Kongresowa",
                     modifier = Modifier
                         .matchParentSize()
                         .clip(RoundedCornerShape(12.dp))
@@ -147,7 +153,10 @@ fun JourneyBox(journey: JourneyData){
 }
 
 @Composable
-fun JourneyRow(journeyItems: List<JourneyData>){
+fun JourneyRow(
+    journeyItems: List<JourneyData>,
+    onRowClick: () -> Unit
+){
     val journeyTitle = journeyItems[0].journeyName
     val scrollState = rememberScrollState()
 
@@ -175,7 +184,7 @@ fun JourneyRow(journeyItems: List<JourneyData>){
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 journeyItems.forEach { item ->
-                    JourneyBox(item)
+                    JourneyBox(item, onJourneyClick = onRowClick)
                 }
             }
         }
@@ -227,7 +236,13 @@ fun MainTextStyle(text : String, textSize: Int, color: Color){
     )
 }
 @Composable
-fun ExploreScreen(tripTropCoins: Int, journeys: List<List<JourneyData>>, closestJourney: ClosestJourneyData, onMapButtonClick: () -> Unit){
+fun ExploreScreen(
+    tripTropCoins: Int,
+    journeys: List<List<JourneyData>>,
+    closestJourney: ClosestJourneyData,
+    onMapButtonClick: () -> Unit,
+    onJourneyClick: () -> Unit
+){
     val closestJournetListSize = closestJourney.listOfRiddles?.size ?: 0
     val smaller = closestJournetListSize == 0
     val boxHeight = if (smaller) 200.dp else 300.dp
@@ -367,7 +382,7 @@ fun ExploreScreen(tripTropCoins: Int, journeys: List<List<JourneyData>>, closest
                     }
                 }
                 journeys.forEach{ journey ->
-                    JourneyRow(journey)
+                    JourneyRow(journey, onJourneyClick)
                 }
             }
         }
@@ -382,7 +397,8 @@ fun ExploreScreenPreview(){
             tripTropCoins = 1777,
             journeys = ExploreMocks.allExploreData,
             closestJourney = ExploreMocks.featuredJourney,
-            onMapButtonClick = {}
+            onMapButtonClick = {},
+            onJourneyClick = {}
         )
     }
 }
