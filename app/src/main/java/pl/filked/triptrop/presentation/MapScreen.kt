@@ -31,18 +31,17 @@ import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.IMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 import pl.filked.triptrop.QuizManager
-import pl.filked.triptrop.data.MapTarget
+import pl.filked.triptrop.models.TropFeature
 import pl.filked.triptrop.ui.theme.OriginalSurfer
 import pl.filked.triptrop.ui.theme.wheat
-import androidx.compose.material3.Button
-import androidx.compose.material3.AlertDialog
 import pl.filked.triptrop.data.QuizQuestion
-
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OsmMapScreen(
-    target: List<MapTarget> = emptyList(),
+    target: List<TropFeature> = emptyList(),
     onBackClick: () -> Unit
 ) {
     val context = LocalContext.current
@@ -54,7 +53,7 @@ fun OsmMapScreen(
     var answerResult by remember { mutableStateOf<String?>(null) }
     var usedQuestionIds by remember { mutableStateOf(setOf<Int>()) }
 
-    var selectedTarget by remember { mutableStateOf<MapTarget?>(null) }
+    var selectedTarget by remember { mutableStateOf<TropFeature?>(null) }
     var distanceToTarget by remember { mutableStateOf<Double?>(null) }
 
     val isCloseEnough = selectedTarget != null &&
@@ -104,11 +103,11 @@ fun OsmMapScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
                     Text(
-                        text = point.title,
+                        text = point.properties.Nazwa,
                         fontSize = 22.sp,
                         fontFamily = OriginalSurfer,
                         color = Color.Black
@@ -118,11 +117,11 @@ fun OsmMapScreen(
 
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
-                            .data(point.imageUrl)
+                            .data(point.properties.Obrazy.firstOrNull() ?: "")
                             .addHeader("User-Agent", "TripTropApp/1.0")
                             .crossfade(true)
                             .build(),
-                        contentDescription = point.title,
+                        contentDescription = point.properties.Nazwa,
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(150.dp)
@@ -133,7 +132,7 @@ fun OsmMapScreen(
 
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
-                        text = point.description,
+                        text = point.properties.Info,
                         fontSize = 16.sp,
                         color = Color.DarkGray
                     )
@@ -184,19 +183,19 @@ fun OsmMapScreen(
                         if (target.isNotEmpty()) {
                             controller.setCenter(
                                 GeoPoint(
-                                    target.first().latitude,
-                                    target.first().longitude
+                                    target.first().geometry.coordinates[1], // latitude
+                                    target.first().geometry.coordinates[0]  // longitude
                                 )
                             )
                         }
 
                         target.forEach { point ->
-                            val geoPoint = GeoPoint(point.latitude, point.longitude)
+                            val geoPoint = GeoPoint(point.geometry.coordinates[1], point.geometry.coordinates[0])
 
                             val marker = Marker(this).apply {
                                 position = geoPoint
-                                title = point.title
-                                snippet = point.description
+                                title = point.properties.Nazwa
+                                snippet = point.properties.Info
                                 setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
 
                                 setOnMarkerClickListener { _, _ ->
@@ -223,7 +222,7 @@ fun OsmMapScreen(
                                     if (location != null && point != null) {
                                         val userGeo =
                                             GeoPoint(location.latitude, location.longitude)
-                                        val targetGeo = GeoPoint(point.latitude, point.longitude)
+                                        val targetGeo = GeoPoint(point.geometry.coordinates[1], point.geometry.coordinates[0])
                                         distanceToTarget = userGeo.distanceToAsDouble(targetGeo)
                                     }
                                 }

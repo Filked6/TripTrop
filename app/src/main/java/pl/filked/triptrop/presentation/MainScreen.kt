@@ -36,17 +36,18 @@ import pl.filked.triptrop.BackpackData
 import pl.filked.triptrop.ExploreMocks
 import pl.filked.triptrop.FriendData
 import pl.filked.triptrop.ProfileSampleData
-import pl.filked.triptrop.R
-import pl.filked.triptrop.data.JourneyData
 import pl.filked.triptrop.ui.theme.*
 import kotlin.collections.listOf
-import pl.filked.triptrop.data.MapTarget
-
+import pl.filked.triptrop.models.TropFeature
+import pl.filked.triptrop.RetrofitClient
+import kotlinx.coroutines.launch
+import androidx.compose.runtime.rememberCoroutineScope
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
 
-    var currentMapTarget by remember { mutableStateOf(listOf<MapTarget>()) }
+    var currentMapTarget by remember { mutableStateOf(listOf<TropFeature>()) }
+    val scope = rememberCoroutineScope()
 
     val items = listOf(
         BottomNavItem.Explore,
@@ -118,7 +119,7 @@ fun MainScreen() {
             startDestination = BottomNavItem.Explore.route,
             modifier = Modifier.padding(innerPadding)
         ){
-            composable(BottomNavItem.Explore.route){
+            composable(BottomNavItem.Explore.route) {
                 val vm: ExploreViewModel = viewModel()
                 LaunchedEffect(Unit) {
                     vm.loadAdventures()
@@ -129,45 +130,24 @@ fun MainScreen() {
                     closestJourney = ExploreMocks.featuredJourney,
 
                     onMapButtonClick = {
-                        currentMapTarget = listOf(
-                            MapTarget(
-                                latitude = 52.220082,
-                                longitude = 21.012086,
-                                title = "Punkt 1",
-                                description = "Pierwszy punkt przygody.",
-                                imageUrl = "https://upload.wikimedia.org/wikipedia/commons/d/d9/Apoteoza_wiedzy_2020.jpg"
-                            ),
-                            MapTarget(
-                                latitude = 52.220800,
-                                longitude = 21.011300,
-                                title = "Punkt 2",
-                                description = "Drugi punkt przygody.",
-                                imageUrl = "https://upload.wikimedia.org/wikipedia/commons/d/d9/Apoteoza_wiedzy_2020.jpg"
-                            )
-                        )
-
-                        navController.navigate("map_screen")
+//                        scope.launch {
+//                            currentMapTarget = clickedJourney.trailIds.map { id ->
+//                                RetrofitClient.api.getTropById(id)
+//                            }
+//
+//
+//                            navController.navigate("map_screen")
+//                        }
                     },
 
                     onJourneyClick = { clickedJourney ->
-                        currentMapTarget = listOf(
-                            MapTarget(
-                                latitude = 52.220082,
-                                longitude = 21.012086,
-                                title = clickedJourney.journeyName + " - punkt 1",
-                                description = "Pierwszy punkt tej trasy.",
-                                imageUrl = "https://upload.wikimedia.org/wikipedia/commons/d/d9/Apoteoza_wiedzy_2020.jpg"
-                            ),
-                            MapTarget(
-                                latitude = 52.220800,
-                                longitude = 21.011300,
-                                title = clickedJourney.journeyName + " - punkt 2",
-                                description = "Drugi punkt tej trasy.",
-                                imageUrl = "https://upload.wikimedia.org/wikipedia/commons/d/d9/Apoteoza_wiedzy_2020.jpg"
-                            )
-                        )
+                        scope.launch {
+                            currentMapTarget = clickedJourney.trailIds.map { id ->
+                                RetrofitClient.api.getTropById(id)
+                            }
 
-                        navController.navigate("map_screen")
+                            navController.navigate("map_screen")
+                        }
                     }
                 )
             }

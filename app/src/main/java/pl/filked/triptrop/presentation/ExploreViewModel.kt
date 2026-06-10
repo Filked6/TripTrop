@@ -18,7 +18,8 @@ fun Adventure.toJourneyData(): JourneyData {
         journeyName = name,
         journeyDetails = "Brak opisu z backendu",
         journeyCost = 0,
-        journeyPhoto = imageUrl
+        journeyPhoto = imageUrl,
+        trailIds = trailIds
     )
 }
 class ExploreViewModel : ViewModel() {
