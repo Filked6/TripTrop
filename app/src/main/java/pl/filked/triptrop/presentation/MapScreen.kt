@@ -39,11 +39,15 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.core.content.ContextCompat.getDrawable
 import pl.filked.triptrop.R
-
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
+import pl.filked.triptrop.GameConfig
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OsmMapScreen(
     target: List<TropFeature> = emptyList(),
+    totalCoins: Int,
+    onCoinsChange: (Int) -> Unit,
     onBackClick: () -> Unit
 ) {
     val context = LocalContext.current
@@ -54,6 +58,24 @@ fun OsmMapScreen(
     var currentQuestion by remember { mutableStateOf<QuizQuestion?>(null) }
     var answerResult by remember { mutableStateOf<String?>(null) }
     var usedQuestionIds by remember { mutableStateOf(setOf<Int>()) }
+
+    //stan punktow, zdobytych tt
+//    val startingCoins = 100
+//    var totalCoins by remember { mutableStateOf(startingCoins) }
+
+    var showAdventureFinishedDialog by remember { mutableStateOf(false) }
+    var adventureCoins by remember { mutableStateOf(0) }
+
+    val rewardPerQuestion = GameConfig.COINS_PER_CORRECT_ANSWER
+    val maxAdventureCoins = target.size * rewardPerQuestion
+
+//
+//    var earnedCoins by remember { mutableStateOf(100) }
+//    var showAdventureFinishedDialog by remember { mutableStateOf(false) }
+//    val rewardPerQuestion = 15
+//    val maxCoins = target.size * rewardPerQuestion
+
+
 
     // Zmienna przechowująca nazwy punktów, w których rozwiązano zagadkę
     var solvedPoints by remember { mutableStateOf(setOf<Pair<String, Boolean>>()) }
@@ -168,7 +190,8 @@ fun OsmMapScreen(
                                 } else {
                                     answerResult = "Brak dostępnych zagadek dla tej trasy."
                                 }
-                            }
+                            },
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
                         ) {
                             Text("Rozwiąż zagadkę")
                         }
@@ -282,6 +305,34 @@ fun OsmMapScreen(
                     color = Color.Black
                 )
             }
+            Box(
+                modifier = Modifier
+                    .padding(top = 40.dp, end = 20.dp)
+                    .width(110.dp)
+                    .height(40.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(wheat)
+                    .border(1.dp, Color.Black.copy(0.4f), RoundedCornerShape(8.dp))
+                    .align(Alignment.TopEnd),
+                contentAlignment = Alignment.Center
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = totalCoins.toString(),
+                        fontSize = 24.sp,
+                        fontFamily = OriginalSurfer,
+                        modifier = Modifier.padding(end = 2.dp)
+                    )
+
+                    Image(
+                        painter = painterResource(R.drawable.trip_trop_coin),
+                        contentDescription = "TripTrop Coin",
+                        modifier = Modifier.size(30.dp)
+                    )
+                }
+            }
         }
     }
 
@@ -308,15 +359,23 @@ fun OsmMapScreen(
                             onClick = {
                                 answerResult =
                                     if (index == question.correctAnswer) {
-                                        "Poprawna odpowiedź!"
+                                        onCoinsChange(totalCoins + rewardPerQuestion)
+                                        adventureCoins += rewardPerQuestion
+                                        "Poprawna odpowiedź!\nOtrzymujesz +15 monet."
                                     } else {
                                         val correct = question.answers[question.correctAnswer]
                                         "Zła odpowiedź. Poprawna odpowiedź to: ${letters[question.correctAnswer]}. $correct"
                                     }
 
                                 // Zapisanie punktu do rozwiązanych po kliknięciu odpowiedzi
-                                selectedTarget?.let { target ->
-                                    solvedPoints = solvedPoints + (target.properties.Nazwa to (answerResult == "Poprawna odpowiedź!"))
+                                selectedTarget?.let { selectedPoint ->
+                                    val isCorrect = index == question.correctAnswer
+
+                                    solvedPoints = solvedPoints + (selectedPoint.properties.Nazwa to isCorrect)
+
+                                    if ((solvedPoints + (selectedPoint.properties.Nazwa to isCorrect)).size == target.size) {
+                                        showAdventureFinishedDialog = true
+                                    }
                                 }
                             },
                             modifier = Modifier
@@ -346,4 +405,30 @@ fun OsmMapScreen(
             }
         )
     }
+    if (showAdventureFinishedDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                showAdventureFinishedDialog = false
+            },
+            title = {
+                Text("Koniec przygody!")
+            },
+            text = {
+                Text(
+                    "Gratulacje!\n\nZdobyto $adventureCoins z $maxAdventureCoins możliwych monet."
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showAdventureFinishedDialog = false
+                        onBackClick()
+                    }
+                ) {
+                    Text("OK")
+                }
+            }
+        )
+    }
 }
+

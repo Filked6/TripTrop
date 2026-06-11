@@ -48,7 +48,7 @@ import pl.filked.triptrop.data.JourneyData
 import pl.filked.triptrop.ui.theme.PirataOne
 import pl.filked.triptrop.ui.theme.TripTropTheme
 import pl.filked.triptrop.ui.theme.*
-
+import pl.filked.triptrop.GameConfig
 @Composable
 fun JourneyBox(
     journey: JourneyData,
@@ -108,7 +108,7 @@ fun JourneyBox(
                         horizontalArrangement = Arrangement.spacedBy(2.dp)
                     ) {
                         Text(
-                            text = "50",
+                            text = (journey.trailIds.size * GameConfig.COINS_PER_CORRECT_ANSWER).toString(),
                             fontSize = 12.sp,
                             fontFamily = OriginalSurfer,
                             style = TextStyle(
@@ -396,7 +396,7 @@ fun ExploreScreen(
 fun ExploreScreenPreview(){
     TripTropTheme {
         ExploreScreen(
-            tripTropCoins = 1777,
+            tripTropCoins = 100,
             journeys = ExploreMocks.allExploreData,
             closestJourney = ExploreMocks.featuredJourney,
             onMapButtonClick = {},

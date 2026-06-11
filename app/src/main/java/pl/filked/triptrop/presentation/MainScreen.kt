@@ -49,6 +49,8 @@ fun MainScreen() {
     var currentMapTarget by remember { mutableStateOf(listOf<TropFeature>()) }
     val scope = rememberCoroutineScope()
 
+    var totalCoins by remember { mutableStateOf(100) }
+
     val items = listOf(
         BottomNavItem.Explore,
         BottomNavItem.Backpack,
@@ -125,7 +127,7 @@ fun MainScreen() {
                     vm.loadAdventures()
                 }
                 ExploreScreen(
-                    tripTropCoins = 1777,
+                    tripTropCoins = totalCoins,
                     journeys = vm.journeys,
                     closestJourney = ExploreMocks.featuredJourney,
 
@@ -163,6 +165,10 @@ fun MainScreen() {
             composable("map_screen"){
                 OsmMapScreen(
                     target = currentMapTarget,
+                    totalCoins = totalCoins,
+                    onCoinsChange = { newCoins ->
+                        totalCoins = newCoins
+                    },
                     onBackClick = { navController.popBackStack() }
                 )
             }
