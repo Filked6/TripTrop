@@ -42,14 +42,15 @@ import pl.filked.triptrop.models.TropFeature
 import pl.filked.triptrop.RetrofitClient
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.rememberCoroutineScope
+import pl.filked.triptrop.CoinViewModel
+import pl.filked.triptrop.GameConfig
+
 @Composable
-fun MainScreen() {
+fun MainScreen(viewModel: CoinViewModel = viewModel()) {
     val navController = rememberNavController()
 
     var currentMapTarget by remember { mutableStateOf(listOf<TropFeature>()) }
     val scope = rememberCoroutineScope()
-
-    var totalCoins by remember { mutableStateOf(100) }
 
     val items = listOf(
         BottomNavItem.Explore,
@@ -87,7 +88,7 @@ fun MainScreen() {
 
                                     Text(
                                         text = item.title,
-                                        fontSize = 14.sp, // Jeśli się dalej rozjeżdża tekst ikonek na dole to zmienić na mniejsze
+                                        fontSize = 14.sp,
                                         fontWeight = FontWeight.Bold
                                     )
                                 }
@@ -127,22 +128,14 @@ fun MainScreen() {
                     vm.loadAdventures()
                 }
                 ExploreScreen(
-                    tripTropCoins = totalCoins,
+                    tripTropCoins = viewModel.totalCoins,
                     journeys = vm.journeys,
                     closestJourney = ExploreMocks.featuredJourney,
-
                     onMapButtonClick = {
-//                        scope.launch {
-//                            currentMapTarget = clickedJourney.trailIds.map { id ->
-//                                RetrofitClient.api.getTropById(id)
-//                            }
-//
-//
-//                            navController.navigate("map_screen")
-//                        }
+                        // TODO: obsługa kliknięcia mapy
                     },
-
                     onJourneyClick = { clickedJourney ->
+                        viewModel.removeCoins(GameConfig.COINS_COST_FOR_JOURNEY)
                         scope.launch {
                             currentMapTarget = clickedJourney.trailIds.map { id ->
                                 RetrofitClient.api.getTropById(id)
@@ -160,14 +153,20 @@ fun MainScreen() {
                 FriendsScreen(FriendData.allFriendsData)
             }
             composable(BottomNavItem.Profile.route){
-                ProfileScreen(ProfileSampleData.profileData)
+                ProfileScreen(
+                    profile = ProfileSampleData.profileData,
+                    tripTropCoins = viewModel.totalCoins
+                )
             }
             composable("map_screen"){
                 OsmMapScreen(
                     target = currentMapTarget,
-                    totalCoins = totalCoins,
+                    totalCoins = viewModel.totalCoins,
                     onCoinsChange = { newCoins ->
-                        totalCoins = newCoins
+                        val earnedCoins = newCoins - viewModel.totalCoins
+                        if (earnedCoins > 0) {
+                            viewModel.addCoins(earnedCoins)
+                        }
                     },
                     onBackClick = { navController.popBackStack() }
                 )

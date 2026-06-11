@@ -69,6 +69,7 @@ fun BigButton(text: String){
         }
     }
 }
+
 @Composable
 fun SmallBox(text: String, value: Int){
     Box(
@@ -97,11 +98,14 @@ fun SmallBox(text: String, value: Int){
         }
     }
 }
+
 @Composable
-fun ProfileScreen(profile: ProfileData){
+fun ProfileScreen(
+    profile: ProfileData,
+    tripTropCoins: Int
+){
     val name = profile.name
     val photo = profile.photoId
-    val tripTropCoins = profile.tripTropCoins
     val artifacts = profile.artifacts
     val journeys = profile.journets
     val tropy = profile.tropy
@@ -257,6 +261,9 @@ fun ProfileScreen(profile: ProfileData){
 @Composable
 fun ProfileScreenPreview(){
     TripTropTheme {
-        ProfileScreen(ProfileSampleData.profileData)
+        ProfileScreen(
+            profile = ProfileSampleData.profileData,
+            tripTropCoins = 1000 // ZMIANA: Przykładowa wartość do podglądu
+        )
     }
 }

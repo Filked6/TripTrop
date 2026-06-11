@@ -108,7 +108,7 @@ fun JourneyBox(
                         horizontalArrangement = Arrangement.spacedBy(2.dp)
                     ) {
                         Text(
-                            text = (journey.trailIds.size * GameConfig.COINS_PER_CORRECT_ANSWER).toString(),
+                            text = GameConfig.COINS_COST_FOR_JOURNEY.toString(),
                             fontSize = 12.sp,
                             fontFamily = OriginalSurfer,
                             style = TextStyle(

@@ -42,6 +42,7 @@ import pl.filked.triptrop.R
 import androidx.compose.foundation.Image
 import androidx.compose.ui.res.painterResource
 import pl.filked.triptrop.GameConfig
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OsmMapScreen(
@@ -59,23 +60,11 @@ fun OsmMapScreen(
     var answerResult by remember { mutableStateOf<String?>(null) }
     var usedQuestionIds by remember { mutableStateOf(setOf<Int>()) }
 
-    //stan punktow, zdobytych tt
-//    val startingCoins = 100
-//    var totalCoins by remember { mutableStateOf(startingCoins) }
-
     var showAdventureFinishedDialog by remember { mutableStateOf(false) }
     var adventureCoins by remember { mutableStateOf(0) }
 
     val rewardPerQuestion = GameConfig.COINS_PER_CORRECT_ANSWER
     val maxAdventureCoins = target.size * rewardPerQuestion
-
-//
-//    var earnedCoins by remember { mutableStateOf(100) }
-//    var showAdventureFinishedDialog by remember { mutableStateOf(false) }
-//    val rewardPerQuestion = 15
-//    val maxCoins = target.size * rewardPerQuestion
-
-
 
     // Zmienna przechowująca nazwy punktów, w których rozwiązano zagadkę
     var solvedPoints by remember { mutableStateOf(setOf<Pair<String, Boolean>>()) }
@@ -340,11 +329,19 @@ fun OsmMapScreen(
         val question = currentQuestion!!
         val letters = listOf("A", "B", "C", "D")
 
+        // Funkcja zamykająca okno zagadki i sprawdzająca zakończenie przygody
+        val closeQuestionDialog = {
+            currentQuestion = null
+            answerResult = null
+
+            // Sprawdzenie, czy wszystko jest rozwiązane (wywoływane po kliknięciu 'Zamknij')
+            if (solvedPoints.size == target.size && target.isNotEmpty()) {
+                showAdventureFinishedDialog = true
+            }
+        }
+
         AlertDialog(
-            onDismissRequest = {
-                currentQuestion = null
-                answerResult = null
-            },
+            onDismissRequest = closeQuestionDialog,
             title = {
                 Text("Zagadka")
             },
@@ -361,21 +358,17 @@ fun OsmMapScreen(
                                     if (index == question.correctAnswer) {
                                         onCoinsChange(totalCoins + rewardPerQuestion)
                                         adventureCoins += rewardPerQuestion
+
                                         "Poprawna odpowiedź!\nOtrzymujesz +15 monet."
                                     } else {
                                         val correct = question.answers[question.correctAnswer]
                                         "Zła odpowiedź. Poprawna odpowiedź to: ${letters[question.correctAnswer]}. $correct"
                                     }
 
-                                // Zapisanie punktu do rozwiązanych po kliknięciu odpowiedzi
+                                // Zapisanie punktu do rozwiązanych po kliknięciu odpowiedzi (bez wyświetlania dialogu końcowego)
                                 selectedTarget?.let { selectedPoint ->
                                     val isCorrect = index == question.correctAnswer
-
                                     solvedPoints = solvedPoints + (selectedPoint.properties.Nazwa to isCorrect)
-
-                                    if ((solvedPoints + (selectedPoint.properties.Nazwa to isCorrect)).size == target.size) {
-                                        showAdventureFinishedDialog = true
-                                    }
                                 }
                             },
                             modifier = Modifier
@@ -395,16 +388,14 @@ fun OsmMapScreen(
             },
             confirmButton = {
                 Button(
-                    onClick = {
-                        currentQuestion = null
-                        answerResult = null
-                    }
+                    onClick = closeQuestionDialog
                 ) {
                     Text("Zamknij")
                 }
             }
         )
     }
+
     if (showAdventureFinishedDialog) {
         AlertDialog(
             onDismissRequest = {
@@ -431,4 +422,3 @@ fun OsmMapScreen(
         )
     }
 }
-
