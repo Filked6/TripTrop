@@ -80,7 +80,7 @@ fun JourneyBox(
                 AsyncImage(
                     // Zamiast samego Stringa, budujemy własne zapytanie
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data("https://upload.wikimedia.org/wikipedia/commons/a/a5/Sala_Kongresowa_2011.JPG")
+                        .data(journey.journeyPhoto)
                         .addHeader("User-Agent", "TripTropApp/1.0")
                         .crossfade(true)
                         .build(),

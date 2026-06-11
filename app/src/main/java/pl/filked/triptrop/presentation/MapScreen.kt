@@ -37,6 +37,8 @@ import pl.filked.triptrop.ui.theme.wheat
 import pl.filked.triptrop.data.QuizQuestion
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.core.content.ContextCompat.getDrawable
+import pl.filked.triptrop.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,6 +55,8 @@ fun OsmMapScreen(
     var answerResult by remember { mutableStateOf<String?>(null) }
     var usedQuestionIds by remember { mutableStateOf(setOf<Int>()) }
 
+    // Zmienna przechowująca nazwy punktów, w których rozwiązano zagadkę
+    var solvedPoints by remember { mutableStateOf(setOf<Pair<String, Boolean>>()) }
     var selectedTarget by remember { mutableStateOf<TropFeature?>(null) }
     var distanceToTarget by remember { mutableStateOf<Double?>(null) }
 
@@ -139,24 +143,35 @@ fun OsmMapScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Button(
-                        onClick = {
-                            val availableQuestions = questions.filter {
-                                it.id !in usedQuestionIds
-                            }
+                    val isPointSolved = solvedPoints.find { it.first == point.properties.Nazwa } != null
 
-                            if (availableQuestions.isNotEmpty()) {
-                                val randomQuestion = availableQuestions.random()
+                    if (isPointSolved) {
+                        Text(
+                            text = "Zagadka dla tego miejsca została już rozwiązana.",
+                            color = Color.Gray,
+                            fontSize = 14.sp,
+                            fontFamily = OriginalSurfer
+                        )
+                    } else {
+                        Button(
+                            onClick = {
+                                val availableQuestions = questions.filter {
+                                    it.id !in usedQuestionIds
+                                }
 
-                                currentQuestion = randomQuestion
-                                usedQuestionIds = usedQuestionIds + randomQuestion.id
-                                answerResult = null
-                            } else {
-                                answerResult = "Brak dostępnych zagadek dla tej trasy."
+                                if (availableQuestions.isNotEmpty()) {
+                                    val randomQuestion = availableQuestions.random()
+
+                                    currentQuestion = randomQuestion
+                                    usedQuestionIds = usedQuestionIds + randomQuestion.id
+                                    answerResult = null
+                                } else {
+                                    answerResult = "Brak dostępnych zagadek dla tej trasy."
+                                }
                             }
+                        ) {
+                            Text("Rozwiąż zagadkę")
                         }
-                    ) {
-                        Text("Rozwiąż zagadkę")
                     }
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -189,24 +204,6 @@ fun OsmMapScreen(
                             )
                         }
 
-                        target.forEach { point ->
-                            val geoPoint = GeoPoint(point.geometry.coordinates[1], point.geometry.coordinates[0])
-
-                            val marker = Marker(this).apply {
-                                position = geoPoint
-                                title = point.properties.Nazwa
-                                snippet = point.properties.Info
-                                setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-
-                                setOnMarkerClickListener { _, _ ->
-                                    selectedTarget = point
-                                    true
-                                }
-                            }
-
-                            overlays.add(marker)
-                        }
-
                         val locationProvider = GpsMyLocationProvider(ctx)
 
                         val myLocationOverlay =
@@ -232,6 +229,37 @@ fun OsmMapScreen(
                         myLocationOverlay.enableFollowLocation()
                         overlays.add(myLocationOverlay)
                     }
+                },
+                update = { mapView ->
+                    mapView.overlays.removeAll { it is Marker }
+
+                    target.forEach { point ->
+                        val geoPoint = GeoPoint(point.geometry.coordinates[1], point.geometry.coordinates[0])
+
+                        val marker = Marker(mapView).apply {
+                            position = geoPoint
+                            title = point.properties.Nazwa
+                            snippet = point.properties.Info
+                            setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+
+                            val pairInSolved = solvedPoints.find { it.first == point.properties.Nazwa }
+                            icon = if (pairInSolved == null) {
+                                getDrawable(context, R.drawable.szary_tropek)
+                            } else if (pairInSolved.second) {
+                                getDrawable(context, R.drawable.zielony_tropek)
+                            } else {
+                                getDrawable(context, R.drawable.czerwony_tropek)
+                            }
+
+                            setOnMarkerClickListener { _, _ ->
+                                selectedTarget = point
+                                true
+                            }
+                        }
+
+                        mapView.overlays.add(marker)
+                    }
+                    mapView.invalidate()
                 }
             )
 
@@ -285,6 +313,11 @@ fun OsmMapScreen(
                                         val correct = question.answers[question.correctAnswer]
                                         "Zła odpowiedź. Poprawna odpowiedź to: ${letters[question.correctAnswer]}. $correct"
                                     }
+
+                                // Zapisanie punktu do rozwiązanych po kliknięciu odpowiedzi
+                                selectedTarget?.let { target ->
+                                    solvedPoints = solvedPoints + (target.properties.Nazwa to (answerResult == "Poprawna odpowiedź!"))
+                                }
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
